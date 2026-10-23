@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Entraînement : vocabulaire de l’essai argumentatif</title>
+<style>
+:root{--bg:#f6f8fb;--card:#fff;--tx:#1d2433;--mu:#667085;--ac:#1d4ed8;--ok:#1b7f4b;--ko:#b42318;--bd:#dfe4ec;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#13161c;--card:#1e222b;--tx:#eceef2;--mu:#9aa3b2;--ac:#6c9bff;--ok:#4cc38a;--ko:#ff7b72;--bd:#323846;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#13161c;--card:#1e222b;--tx:#eceef2;--mu:#9aa3b2;--ac:#6c9bff;--ok:#4cc38a;--ko:#ff7b72;--bd:#323846;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.3rem;margin:0 0 4px}
+.sub{color:var(--mu);font-size:.92rem;margin:0 0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.chip{padding:6px 12px;font-size:.85rem;border-radius:999px}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin:8px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+.meta{display:flex;justify-content:space-between;color:var(--mu);font-size:.85rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-top:14px}
+.q{font-size:1.1rem;font-weight:600;margin:0 0 12px}
+input{width:100%;font:inherit;padding:12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx)}
+.row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button{font:inherit;padding:10px 16px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+button.p{background:var(--ac);border-color:var(--ac);color:#fff}
+.fb{margin-top:14px;padding:12px;border-radius:10px;display:none}
+.fb.ok{display:block;background:color-mix(in srgb,var(--ok) 14%,transparent);border:1px solid var(--ok)}
+.fb.ko{display:block;background:color-mix(in srgb,var(--ko) 14%,transparent);border:1px solid var(--ko)}
+.fb b{display:block;margin-bottom:2px}
+.end{text-align:center}.end .big{font-size:2.2rem;font-weight:700;color:var(--ac)}
+</style>
+</head>
+<body>
+<main>
+<h1>🇬🇧 Vocabulary for the argumentative essay</h1>
+<p class="sub">Lis la consigne en français, réponds <b>en anglais</b>. Les majuscules, la ponctuation et le « to » devant un verbe ne comptent pas. Une seule variante suffit quand plusieurs sont possibles.</p>
+<div class="chips" id="chips"></div>
+<div class="bar"><i id="bar"></i></div>
+<div class="meta"><span id="pos"></span><span id="sc"></span></div>
+<div class="card" id="card"></div>
+</main>
+<script>
+var CATS={S:"Sujet",L:"Mots de liaison",N:"Nuancer",E:"État-providence",T:"Travail",P:"Politique",R:"Retraites"};
+var RAW=[
+"S|Dans quelle mesure… ?|How far…? / To what extent…?|how far,to what extent",
+"S|l’État-providence|the welfare state|welfare state",
+"S|l’État-nounou (péjoratif)|the nanny state|nanny state",
+"S|garant|guarantor|guarantor",
+"S|filet de sécurité|safety net|safety net",
+"S|éroder|to erode|erode",
+"S|s’amenuiser|to dwindle|dwindle,wane",
+"S|le tournant néolibéral|the neoliberal turn|neoliberal turn",
+"S|pierre angulaire|cornerstone|cornerstone",
+"S|Quel rapport de 1942 a inspiré l’État-providence britannique ?|The Beveridge Report|beveridge",
+"L|De plus|Moreover / Furthermore / In addition|moreover,furthermore,in addition,what is more",
+"L|Cependant|However / Yet / Nevertheless|however,yet,nevertheless,nonetheless",
+"L|En revanche|By contrast / On the other hand|by contrast,on the other hand,conversely",
+"L|Certes…|Admittedly… / Granted…|admittedly,granted",
+"L|Malgré|Despite / In spite of|despite,in spite of",
+"L|En raison de|Owing to / Due to / Because of|owing to,due to,because of",
+"L|Par conséquent|Consequently / As a result / Therefore|consequently,as a result,therefore,hence",
+"L|Cela a ouvert la voie à|This paved the way for|paved the way for",
+"L|Par exemple|For instance / For example|for instance,for example",
+"L|De même|Similarly / Likewise|similarly,likewise",
+"L|Alors que|Whereas|whereas",
+"L|Dans une certaine mesure|To some extent / Up to a point|to some extent,up to a point",
+"L|En somme|All in all / To sum up|all in all,to sum up,ultimately",
+"N|On pourrait soutenir que…|It could be argued that… / One might argue that…|it could be argued,one might argue",
+"N|Cela semble indiquer que…|This seems to suggest that…|seems to suggest,would appear to indicate",
+"N|Les données indiquent…|The evidence points to…|evidence points to",
+"N|Dans l’ensemble|By and large|by and large",
+"N|Il est frappant que…|It is striking that…|it is striking",
+"N|Les chiffres le confirment|This is borne out by the figures|borne out",
+"N|La croyance a été érodée plutôt qu’abandonnée|The belief has been eroded rather than abandoned|eroded rather than abandoned",
+"E|contrat social|social contract|social contract",
+"E|droits sociaux / prestations|entitlements / benefits|entitlements,benefits",
+"E|prestations sous conditions de ressources|means-tested benefits|means-tested",
+"E|retraite publique|the state pension|state pension",
+"E|salaire minimum|minimum wage|minimum wage,national living wage",
+"E|indemnités maladie|sick pay|sick pay",
+"E|dépenses publiques|public spending / public expenditure|public spending,public expenditure",
+"E|tailler dans les dépenses|to slash spending|slash,cut,squeeze",
+"E|austérité|austerity / belt-tightening|austerity,belt-tightening",
+"E|déficit budgétaire|budget deficit|budget deficit",
+"E|dette publique|public debt|public debt",
+"E|pression fiscale|tax burden|tax burden",
+"E|redistribution|redistribution|redistribution",
+"E|écart de richesse|the wealth gap|wealth gap",
+"E|crise du coût de la vie|cost of living crisis|cost of living crisis",
+"E|sans-abrisme|homelessness|homelessness",
+"E|désengagement de l’État|rolling back the state|roll back,rolling back,retrench",
+"E|privatisation|privatisation|privatisation,privatization",
+"E|responsabilité individuelle|individual responsibility / self-reliance|individual responsibility,self-reliance",
+"E|« chacun pour soi »|“sink or swim”|sink or swim",
+"E|affaiblir, saper (verbe de l’érosion)|to undermine / to weaken|undermine,weaken,chip away",
+"E|défendre, préserver (verbe de défense du modèle)|to uphold / to safeguard|uphold,safeguard,preserve,defend",
+"T|économie des petits boulots|the gig economy|gig economy",
+"T|livreurs|delivery riders|delivery riders,riders,couriers",
+"T|tarification dynamique|dynamic pricing|dynamic pricing",
+"T|emploi précaire|precarious work / job insecurity|precarious work,job insecurity,precarity",
+"T|action collective (en justice)|class action|class action",
+"T|vide juridique|loophole|loophole,regulatory gap",
+"T|syndicat|trade union (US: labor union)|trade union,labor union,labour union,union",
+"T|négociation collective|collective bargaining|collective bargaining",
+"T|fermeture d’usine|plant closure / factory closure|plant closure,factory closure",
+"T|être licencié|to be made redundant / to be laid off|made redundant,laid off",
+"T|délocaliser|to relocate / to offshore|relocate,offshore",
+"T|désindustrialisation|deindustrialisation|deindustrialisation,deindustrialization,industrial decline",
+"T|impuissant|powerless / helpless|powerless,helpless,impotent",
+"P|désillusion|disillusionment / disenchantment|disillusionment,disenchantment",
+"P|défiance|mistrust|mistrust,distrust",
+"P|électorat|the electorate|electorate",
+"P|programme électoral|manifesto|manifesto",
+"P|faire marche arrière|to U-turn / to backtrack|u-turn,backtrack",
+"P|un retour de bâton|a backlash|backlash",
+"P|surenchère (de promesses)|a bidding war|bidding war",
+"P|suicide politique|political suicide|political suicide,electorally impossible",
+"R|population vieillissante|an ageing population|ageing population,aging population,greying",
+"R|espérance de vie|life expectancy|life expectancy",
+"R|ratio de dépendance|dependency ratio|dependency ratio",
+"R|fossé générationnel|generational divide|generational divide,intergenerational",
+"R|des ajustements à la marge|fiddling around the edges|fiddling around the edges",
+"R|être piégé par ses promesses passées|to be trapped by one’s past promises|trapped by"
+].map(function(l){var p=l.split("|");return{c:p[0],f:p[1],a:p[2],k:p[3].split(",")}});
+var sel={},pool,i,score,done;
+function norm(s){return " "+s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’']/g,"").replace(/[^a-z0-9\- ]/g," ").replace(/\s+/g," ").trim().replace(/^to /,"").replace(/^the /,"").replace(/^an? /,"")+" "}
+function shuffle(a){a=a.slice();for(var j=a.length-1;j>0;j--){var k=Math.floor(Math.random()*(j+1)),t=a[j];a[j]=a[k];a[k]=t}return a}
+function $(id){return document.getElementById(id)}
+function chips(){
+ var h='<button class="chip'+(Object.keys(sel).length?'':' on')+'" data-c="*">Tout</button>';
+ for(var c in CATS)h+='<button class="chip'+(sel[c]?' on':'')+'" data-c="'+c+'">'+CATS[c]+'</button>';
+ $("chips").innerHTML=h;
+ Array.prototype.forEach.call($("chips").children,function(b){b.onclick=function(){var c=b.getAttribute("data-c");if(c==="*")sel={};else{if(sel[c])delete sel[c];else sel[c]=1}chips();start()}})}
+function start(){
+ var keys=Object.keys(sel);
+ pool=shuffle(RAW.filter(function(x){return !keys.length||sel[x.c]}));
+ i=0;score=0;show()}
+function show(){
+ done=false;
+ $("bar").style.width=(i/pool.length*100)+"%";
+ $("sc").textContent="Score : "+score;
+ if(i>=pool.length){
+  $("pos").textContent="Terminé";
+  $("card").innerHTML='<div class="end"><div class="big">'+score+' / '+pool.length+'</div><p>'+(score>=pool.length*0.8?'Excellent ! 🎉':score>=pool.length*0.5?'Bien ! Continue à t’entraîner.':'Courage ! Relis ta fiche et réessaie.')+'</p><button class="p" onclick="start()">Recommencer</button></div>';
+  return}
+ var x=pool[i],q=/\?$/.test(x.f)?x.f:'En anglais : « '+x.f+' »';
+ $("pos").textContent="Question "+(i+1)+" / "+pool.length;
+ $("card").innerHTML='<p class="q">'+q+'</p><input id="in" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Ta réponse en anglais…"><div class="row"><button class="p" id="ok">Valider</button><button id="rv">Voir la réponse</button></div><div class="fb" id="fb"></div>';
+ $("ok").onclick=check;$("rv").onclick=function(){reveal(false)};
+ $("in").onkeydown=function(e){if(e.key==="Enter")done?next():check()};
+ $("in").focus()}
+function check(){
+ if(done)return;
+ var v=norm($("in").value);if(v.trim()==="")return;
+ var ok=pool[i].k.some(function(k){return v.indexOf(norm(k))>-1});
+ reveal(ok)}
+function reveal(ok){
+ if(done)return;done=true;if(ok)score++;
+ var f=$("fb");f.className="fb "+(ok?"ok":"ko");
+ f.innerHTML='<b>'+(ok?'✔ Correct !':'✘ Réponse attendue')+'</b>'+pool[i].a;
+ $("sc").textContent="Score : "+score;
+ $("ok").style.display="none";$("rv").style.display="none";
+ var b=document.createElement("button");b.className="p";b.textContent=i+1>=pool.length?"Résultat":"Suivant →";b.onclick=next;
+ $("card").querySelector(".row").appendChild(b);b.focus()}
+function next(){i++;show()}
+chips();start();
+</script>
+</body>
+</html>
